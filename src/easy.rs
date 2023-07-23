@@ -41,36 +41,13 @@ impl Solution {
 
         let mut char_count = vec![0; 26];
 
+        // bytes - 'a' byte = char index from the alphabet list
+        // if is anagram, then the char count will be 0
         for i in 0..s.len() {
             char_count[(s.as_bytes()[i] - b'a') as usize] += 1;
             char_count[(t.as_bytes()[i] - b'a') as usize] -= 1;
         }
 
         !char_count.iter().any(|i| *i != 0)
-    }
-
-    pub fn group_anagrams(strs: Vec<String>) -> Vec<Vec<String>> {
-        use std::collections::HashMap;
-
-        let mut collected_data: Vec<Vec<String>> = Vec::new();
-        let mut seen_before: HashMap<[u8; 26], Vec<String>> = HashMap::new();
-
-        for str in strs.iter() {
-            let mut char_count = [0; 26];
-            for &byte in str.as_bytes() {
-                char_count[(byte - b'a') as usize] += 1;
-            }
-
-            seen_before
-                .entry(char_count)
-                .or_insert(Vec::new())
-                .push(str.to_string());
-        }
-
-        for (_, val) in seen_before {
-            collected_data.push(val);
-        }
-
-        collected_data
     }
 }
