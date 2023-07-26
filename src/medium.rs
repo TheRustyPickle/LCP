@@ -33,11 +33,11 @@ impl Solution {
     }
 
     pub fn top_k_frequent(nums: Vec<i32>, k: i32) -> Vec<i32> {
-        use std::collections::{HashMap, BinaryHeap};
         use std::cmp::Reverse;
+        use std::collections::{BinaryHeap, HashMap};
 
         let mut data = HashMap::new();
-        
+
         let mut collection = Vec::new();
 
         for i in nums {
@@ -45,12 +45,12 @@ impl Solution {
             *count += 1;
         }
         let mut min_heap = BinaryHeap::with_capacity(k as usize);
-        
+
         for (index, amount) in data {
             min_heap.push(Reverse((amount, index)));
 
             // pop out the lowest element
-            if min_heap.len() > k as usize{
+            if min_heap.len() > k as usize {
                 min_heap.pop();
             }
         }
@@ -58,7 +58,7 @@ impl Solution {
         while let Some(Reverse((_, num))) = min_heap.pop() {
             collection.push(num);
         }
-        
+
         collection
     }
 
@@ -66,19 +66,81 @@ impl Solution {
     pub fn product_except_self(nums: Vec<i32>) -> Vec<i32> {
         let n = nums.len();
         let mut output = vec![1; n];
-        
+
         let mut left_product = 1;
         for i in 0..n {
             output[i] *= left_product;
             left_product *= nums[i];
         }
-        
+
         let mut right_product = 1;
         for i in (0..n).rev() {
             output[i] *= right_product;
             right_product *= nums[i];
         }
-        
+
         output
+    }
+
+    pub fn is_valid_sudoku(board: Vec<Vec<char>>) -> bool {
+        use std::collections::HashSet;
+
+        // Each 3 rows contains 3 blocks
+        let mut block_data: Vec<HashSet<&char>> = Vec::with_capacity(3);
+
+        block_data.push(HashSet::new());
+        block_data.push(HashSet::new());
+        block_data.push(HashSet::new());
+
+        let mut row_data: HashSet<&char> = HashSet::new();
+
+        // We are looping by rows, so to check column
+        // We need to save data on every column on every row
+        let mut column_data: Vec<HashSet<&char>> = Vec::with_capacity(9);
+        for _ in 0..9 {
+            column_data.push(HashSet::new())
+        }
+
+        for row_num in 0..9 {
+            for row_val in 0..9 {
+                if board[row_num][row_val] == '.' {
+                    continue;
+                }
+                // check if block is valid
+                {
+                    let block_index = row_val / 3;
+
+                    if !block_data[block_index].insert(&board[row_num][row_val]) {
+                        return false;
+                    }
+                }
+
+                // check if the row is valid
+                {
+                    if !row_data.insert(&board[row_num][row_val]) {
+                        return false;
+                    }
+                }
+
+                // check if the column is valid
+                {
+                    if !column_data[row_val].insert(&board[row_num][row_val]) {
+                        return false;
+                    }
+                }
+            }
+
+            // Clear block_data every 3 row
+            if (row_num + 1) % 3 == 0 {
+                for set in &mut block_data {
+                    set.clear();
+                }
+            }
+
+            // Looping through row so after each row, get it cleared
+            row_data.clear();
+        }
+
+        true
     }
 }
