@@ -143,4 +143,31 @@ impl Solution {
 
         true
     }
+
+    pub fn longest_consecutive(nums: Vec<i32>) -> i32 {
+        use std::collections::HashSet;
+
+        let mut max_length = 0;
+        // hashset has better .contain() complexity than vector
+        let data = nums.into_iter().collect::<HashSet<i32>>();
+
+        for &num in &data {
+            if !data.contains(&(num - 1)) {
+                // no num -1 = start of the chain
+                let mut current_length = 1;
+                let mut current_num = num + 1;
+
+                while data.contains(&current_num) {
+                    current_num += 1;
+                    current_length += 1;
+                }
+
+                if current_length > max_length {
+                    max_length = current_length;
+                }
+            }
+        }
+
+        max_length
+    }
 }
