@@ -50,4 +50,25 @@ impl Solution {
 
         !char_count.iter().any(|i| *i != 0)
     }
+
+    pub fn is_valid(s: String) -> bool {
+        let mut position = Vec::with_capacity(s.len());
+        for char in s.chars() {
+            match char {
+                '(' => position.push(&')'),
+                '{' => position.push(&'}'),
+                '[' => position.push(&']'),
+                ')' | '}' | ']' => match position.pop() {
+                    Some(val) => {
+                        if val != &char {
+                            return false;
+                        }
+                    }
+                    None => return false,
+                },
+                _ => {}
+            }
+        }
+        position.is_empty()
+    }
 }
