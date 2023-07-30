@@ -171,3 +171,46 @@ impl Solution {
         max_length
     }
 }
+
+#[allow(dead_code)]
+pub struct MinStack {
+    saved_data: Vec<(i32, i32)>,
+}
+
+impl MinStack {
+    #[allow(dead_code)]
+    fn new() -> Self {
+        MinStack {
+            saved_data: Vec::new(),
+        }
+    }
+
+    #[allow(dead_code)]
+    fn push(&mut self, val: i32) {
+        if self.saved_data.is_empty() {
+            self.saved_data.push((val, val));
+        } else {
+            if self.saved_data[self.saved_data.len() - 1].1 > val {
+                self.saved_data.push((val, val));
+            } else {
+                self.saved_data
+                    .push((val, self.saved_data[self.saved_data.len() - 1].1))
+            }
+        }
+    }
+
+    #[allow(dead_code)]
+    fn pop(&mut self) {
+        self.saved_data.pop();
+    }
+    
+    #[allow(dead_code)]
+    fn top(&self) -> i32 {
+        self.saved_data[self.saved_data.len() - 1].0
+    }
+
+    #[allow(dead_code)]
+    fn get_min(&self) -> i32 {
+        self.saved_data[self.saved_data.len() - 1].1
+    }
+}
